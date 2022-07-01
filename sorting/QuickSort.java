@@ -1,8 +1,12 @@
+package sorting;
+
 import java.util.Arrays;
 
 public class QuickSort {
 
     /*
+    no other sorting algorithm performs better than Quick Sort on arrays bcz it is in place sorting algorithm which means it doesn't required
+    any additional space, whereas merge sort requires.
      * quick vs merge sort
      * merge sort - worst, avg, best = O(nlogn)
      * quick sort - worst = O(n2) {when pivot element is the smallest or largest element bcz array is either in ascending order or descending order}

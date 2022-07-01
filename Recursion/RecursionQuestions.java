@@ -67,7 +67,7 @@ public class RecursionQuestions {
         if (current == 'x'){
             count++; // count x
             moveAllX(str, index+1, count, newString);
-        }else {
+        } else {
             newString += current; // else save non x chars
             moveAllX(str, index+1, count, newString);
         }
@@ -132,7 +132,7 @@ public class RecursionQuestions {
         }
     }
 
-    /* all possible permutations of string (possible comninations) */
+    /* all possible permutations of string (possible combinations of letters) */
     static void permutations(String str, String newString) {
         if (str.length() == 0) {
             System.out.println(newString);
@@ -175,8 +175,6 @@ public class RecursionQuestions {
         return decimalToBinary(decimal/2, result);
     }
 
-    public static void main(String[] args) {
-
-    }
+    public static void main(String[] args) {  }
 
 }

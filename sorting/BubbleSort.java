@@ -1,8 +1,10 @@
+package sorting;
+
 import java.util.Arrays;
 
 public class BubbleSort {
 
-    /* compare adjacent elements using index [j]
+    /* 1. compare adjacent elements using index [j]
     place larger element at last, so no need to compare them bcz thay are sorted 
     n=5
     i=0 j=0,1,2,3,4

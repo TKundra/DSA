@@ -1,3 +1,4 @@
+package searching;
 
 public class BinarySearch {
 
@@ -19,7 +20,7 @@ public class BinarySearch {
             middle = (low+high)/2;
         }
         return -1;
-    }
+    } // O(logn)
 
     public static void main(String[] args){
         int[] array = {1,2,3,4,5,6};

@@ -1,16 +1,24 @@
+package array;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Set;
 import java.util.Stack;
+import java.util.TreeMap;
 
 class Questions {
 
     /* -----------------------------------------------------------------------------------------------------
         1. save element of 0th index
         2. add next element to current
-        3. check if updated current is greater or array[index] individually
+        3. check if updated current is greater or array[index] is greater individually
         4. if array[index] then update current one
         5. get max of (max, current)
     */
@@ -25,7 +33,7 @@ class Questions {
             max = Math.max(max, cur_max);
         }
         return max;
-    } // maximum subarray O(n)
+    } // largest sum contiguous subarray O(n)
 
     // -----------------------------------------------------------------------------------------------------
     static boolean containsDuplicates(int[] array) {
@@ -53,6 +61,9 @@ class Questions {
     } // O(n)
 
     /* -----------------------------------------------------------------------------------------------------
+        n - number of packets
+        m - students
+        array - contains packets with number of chocolate
         1. give one packet to each student
         2. d/w number of max, min chocolates in packet should be minimum
         e.g -   s1 got packet with 2 chocolates
@@ -90,7 +101,7 @@ class Questions {
             }
         }
         return water;
-    }
+    } // O(n)
 
     // -----------------------------------------------------------------------------------------------------
     static void missingAndRepeatingNumberOneToTen(int[] array) { // [4,3,3,1,5]
@@ -115,7 +126,7 @@ class Questions {
         int total = m*(m+1)/2;
         int sum = Arrays.stream(array).sum();
         return (total-sum);
-    }
+    } // O(n)
 
     // -----------------------------------------------------------------------------------------------------
     static void pairWithGivenSum(int[] array, int sum) {
@@ -127,7 +138,7 @@ class Questions {
             }
             set.add(array[i]);
         }
-    }
+    } // O(n)
 
     // -----------------------------------------------------------------------------------------------------
     static int triplets(int[] array) {
@@ -145,7 +156,21 @@ class Questions {
             }
         }
         return count;
-    }
+    } // O(n2)
+
+    // -----------------------------------------------------------------------------------------------------
+    static void tripletsOfGivenSum(int[] array, int sum) {
+        int n = array.length;
+        HashSet<Integer> set = new HashSet<Integer>();
+        for (int i=0; i<n-2; i++) {
+            int temp = sum - array[i];
+            for (int j=i+1; j<n; j++) {
+                if (set.contains(temp - array[j]))
+                    System.out.println(array[i] + " " + array[j] + " " + (temp-array[j]));
+                set.add(array[j]);
+            }
+        }
+    } // O(n2)
 
     // -----------------------------------------------------------------------------------------------------
     static void sort012WithoutSortingAlgo(int[] array) {
@@ -175,7 +200,7 @@ class Questions {
             c2--;
         }
         System.out.println(Arrays.toString(array));
-    }
+    } // O(n)
 
     // -----------------------------------------------------------------------------------------------------
     static void leadersInArray(int[] array) {
@@ -188,33 +213,6 @@ class Questions {
                 System.out.print(max + " ");
             }
         }
-    }
-
-    /* -----------------------------------------------------------------------------------------------------
-        [1,2,3,4]
-        [2*3*4, 1*3*4, 1*2*4, 1*2*3] i.e [24, 12, 8, 6]
-    */
-    static void productOfArrayExceptSelf(int[] array) {
-        int n = array.length;
-        if (n == 1) {
-            System.out.println("0");
-            return;
-        }
-        int i, temp = 1;
-        int[] product = new int[n];
-        for (int j=0; j<n; j++) {
-            product[j] = 1; // initialize as 1
-        }
-        for (i=0; i<n; i++) { // temp variable contains product of elements on left side exlcuding array[i]
-            product[i] = temp;
-            temp *= array[i];
-        }
-        temp = 1;
-        for (i=n-1; i>=0; i--) { // temp variable contains product of elements on right side exlcuding array[i]
-            product[i] *= temp;
-            temp *= array[i];
-        }
-        System.out.println(Arrays.toString(product));
     } // O(n)
 
     /* -----------------------------------------------------------------------------------------------------
@@ -246,7 +244,7 @@ class Questions {
     static int containerWithMostWater(int[] array) {
         int left = 0, right = array.length-1, area = 0;
         while (left < right) {
-            area = Math.max(area, Math.min(array[left], array[right])*(right-left)); // max(area, min(first, last)*(last-first))
+            area = Math.max(area, Math.min(array[left], array[right])*(right-left)); // max(area, height*length) where area is height*length
             if (array[left] < array[right])
                 left += 1;
             else
@@ -291,7 +289,7 @@ class Questions {
             }
         }
         System.out.println(Arrays.toString(array));
-    }
+    } // O(n)
 
     // -----------------------------------------------------------------------------------------------------
     static void pythagoreanTriplet(int[] array) {
@@ -306,24 +304,42 @@ class Questions {
                     System.out.println("(" + array[i] + "," + array[j] + ") ");
             }
         }
-    }
+    } // O(n2)
 
     // -----------------------------------------------------------------------------------------------------
     static void majorityElement(int[] array) {
         Map<Integer, Integer> map = new HashMap<>();
         for (Integer i : array) {
             if (map.containsKey(i)) {
-                map.put(i, map.get(i)+1);
+                int count = map.get(i) + 1;
+                if (count > array.length/2) {
+                    System.out.println("majorty element: " + i);
+                    return;
+                } else {
+                    map.put(i, count);
+                }
             } else {
                 map.put(i, 1);
             }
         }
-        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            if (entry.getValue() > array.length/2) {
-                System.out.println(entry.getKey() + " ");
+    } // O(n)
+
+    // -----------------------------------------------------------------------------------------------------
+    static void majorityElementK(int[] array, int k) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (Integer i : array) {
+            if (map.containsKey(i)) {
+                int count = map.get(i) + 1;
+                if (count > array.length/k) {
+                    System.out.println(i);
+                } else {
+                    map.put(i, count);
+                }
+            } else {
+                map.put(i, 1);
             }
         }
-    }
+    } // O(n)
 
     // -----------------------------------------------------------------------------------------------------
     static void rearrangeArrayAlternatively(int[] array) {
@@ -342,89 +358,6 @@ class Questions {
     }
 
     // -----------------------------------------------------------------------------------------------------
-    static void twoSum(int[] array, int sum) {
-        int n = array.length;
-        HashSet<Integer> map = new HashSet<>();
-        for (int i = 0; i < n; i++) {
-            int diff = sum - array[i];
-            if (map.contains(diff)) {
-                System.out.println(array[i] + " " + diff);
-            }
-            map.add(array[i]);
-        }
-        // Arrays.sort(array);
-        // int left = 0, right = n-1;
-        // while (left < right) {
-        //     if (array[left] + array[right] < sum)
-        //         left++;
-        //     else if (array[left] + array[right] > sum)
-        //         right--;
-        //     else if (array[left] + array[right] == sum) {
-        //         System.out.println(array[left] + " " + array[right]);
-        //         left++;
-        //     }
-        // }
-    }
-
-    // -----------------------------------------------------------------------------------------------------
-    static void threeSum(int[] array, int sum) {
-        int n = array.length;
-        for (int i = 0; i < n-2; i++) {
-            HashSet<Integer> set = new HashSet<Integer>();
-            int curr_sum = sum-array[i];
-            for (int j=i+1; j<n; j++) {
-                if (set.contains(sum-array[j])) {
-                    System.out.println(array[i] + " " + array[j] + " " + (curr_sum-array[j]));
-                }
-                set.add(array[j]);
-            }
-        }
-    } // O(n2)
-
-    /* -----------------------------------------------------------------------------------------------------
-        [1,2], [2,4], [5,8], [7,10], [11,12]
-        result - [1,4], [5,10], [11,12] condition - will be if >=
-    */
-    static class Interval {
-        int start, end;
-        Interval(int start, int end) {
-            this.start = start;
-            this.end = end;
-        }
-    }
-    static void mergeOverlappingIntervals(Interval[] array) {
-        int n = array.length;
-        if (n<=0) return;
-        Stack<Interval> stack = new Stack<>();
-        // sort
-        Arrays.sort(array, new Comparator<Interval>() {
-            @Override
-            public int compare(Interval i1, Interval i2) {
-                return i1.start-i2.start;
-            }
-        });
-        // push 1st in stack
-        stack.push(array[0]);
-        for (int i=1; i<n; i++) {
-            Interval top = stack.peek();
-            if (top.end < array[i].start) {
-                System.out.println(array[i].start);
-                stack.push(array[i]);
-            }
-            else if (top.end < array[i].end) {
-                top.end = array[i].end;
-                stack.pop();
-                stack.push(top);
-            }
-        }
-        // print
-        while(!stack.isEmpty()) {
-            Interval interval = stack.pop();
-            System.out.print("[" + interval.start + "," + interval.end + "] ");
-        }
-    }
-
-    // -----------------------------------------------------------------------------------------------------
     static void cyclicRotateArrayByOne(int[] array) {
         int i=0, j=array.length-1;
         while (i!=j) {
@@ -434,7 +367,7 @@ class Questions {
             i++;
         }
         System.out.println(Arrays.toString(array));
-    }
+    } // O(n)
 
     // -----------------------------------------------------------------------------------------------------
     static void firstRepeatingElement(int[] array) {
@@ -453,12 +386,29 @@ class Questions {
         } else {
             System.out.println("no repetiting element found");
         }
-    }
+    } // O(n)
 
+    // brute force method-----------------------------------------------------------------------------------
+    /*
+     * inversion of array - how far or close the array is form being sorted
+     * 3    5   6   9   1   2   7   8
+     * inversions are: (3,1), (3,2), (5,1), (5,2), (6,1), (6,2), (9,1), (9,2), (9,7), (9,8)
+    */
+    static int inversionOfArrayBF(int[] array) {
+        int inv = 0;
+        for (int i = 0; i < array.length-1; i++) {
+            for (int j=i+1; j < array.length; j++) {
+                if (array[i] > array[j]) // ar[i] > ar[j] annd i<j
+                    inv++;
+            }
+        }
+        return inv;
+    } // O(n^2)
+    
     // -----------------------------------------------------------------------------------------------------
     static int merge(int[] array, int start, int mid, int end){
         int i = start, j = mid+1, p, index = start;
-        int[] temp = new int[array.length];
+        int[] temp = new int[end-start+1];
         int count = 0;
         /* both partitions to compare and store in array*/
         while (i<=mid && j<=end){
@@ -508,11 +458,291 @@ class Questions {
         }
         return count;
     }
-    static int inversionOfArray(int[] array) {
+    static int countInversion(int[] array) {
         return inversionOfArray(array, 0, array.length-1);
+    } // O(nlogn)
+    // -----------------------------------------------------------------------------------------------------
+    static class Pair {
+        int min;
+        int max;
+    }
+    static Pair minMaxElement(int[] array, int n) {
+        Pair minMax = new Pair();
+        int i;
+
+        if (n == 1) {
+            minMax.min = array[0];
+            minMax.max = array[0];
+            return minMax;
+        }
+        
+        if (array[0] > array[1]) { // length more than 1
+            minMax.max = array[0];
+            minMax.min = array[1];
+        } else {
+            minMax.max = array[1];
+            minMax.min = array[0];
+        }
+
+        for (i=2; i<n; i++) {
+            if (array[i] > minMax.max) {
+                minMax.max = array[i];
+            } else if (array[i] < minMax.min) {
+                minMax.min = array[i];
+            }
+        }
+        
+        return minMax;
+    }
+    static void minMaxElement(int[] array) {
+        Pair result = minMaxElement(array, array.length);
+        System.out.println("min: " + result.min + " max: " + result.max);
+    }
+    
+    // -----------------------------------------------------------------------------------------------------
+    static void moveAllNegativeElementAtOneSide(int[] array, int left, int right) {
+        while (left <= right) {
+            if (array[left] < 0 && array[right] < 0)
+                left++;
+            else if (array[left] > 0 && array[right] < 0) {
+                int swap = array[left];
+                array[left] = array[right];
+                array[right] = swap;
+                left++;
+                right--;
+            }
+            else if (array[left] > 0 && array[right] > 0)
+                right--;
+            else {
+                left++;
+                right--;
+            }
+        }
+        System.out.println(Arrays.toString(array));
+    } // O(n)
+    
+    // -----------------------------------------------------------------------------------------------------
+    /*
+     * {1,5,10,15}, k=3
+     * to minimise the maximum difference always apply this pattern to towers - inc  dec inc dec ...
+     * save ans = ar[n-1] - ar[0] = (15-1) = 14
+     * min = Math.min(1+3, 5-3) = (4,2) = 2
+     * max = Math.max(1+3, 15-3) = (4,12) = 12
+     * ans = Math.min(14, max-min) = (14, 12-2) = (14,10) = 10
+     * in loop ...
+    */
+    static void minimiseTheMaximumDifference(int[] array, int k) {
+        Arrays.sort(array);
+        int n = array.length;
+        int ans = array[n-1] - array[0];
+        int min = array[0];
+        int max = array[n-1];
+        for (int i=1; i<n; i++) {
+            if (array[i] - k < 0) continue;
+            min = Math.min(array[0]+k, array[i]-k);
+            max = Math.max(array[i-1]+k, array[n-1]-k);
+            ans = Math.min(ans, max-min);
+        }
+        System.out.println(ans);
+    } // (nlogn) bcz we used .sort()
+    
+    // -----------------------------------------------------------------------------------------------------
+    static void union(int[] A, int[] B) {
+        HashSet<Integer> hs = new HashSet<Integer>();
+        for (int i = 0; i < A.length; i++)
+            hs.add(A[i]);
+        for (int i = 0; i < B.length; i++)
+            hs.add(B[i]);
+        System.out.println(hs);
+    } // O(m+n)
+
+    // -----------------------------------------------------------------------------------------------------
+    static void intersection(int[] A, int[] B) {
+        HashSet<Integer> hs = new HashSet<Integer>();
+        for (int i = 0; i < A.length; i++)
+            hs.add(A[i]);
+        for (int i = 0; i < B.length; i++)
+            if (hs.contains(B[i]))
+                System.out.println(B[i]);
+    } // O(m+n)
+
+    // -----------------------------------------------------------------------------------------------------
+    static void duplicatesInArray(int[] array) {
+        int n = array.length;
+        for (int i=0; i<n; i++)
+            array[array[i]%n] = array[array[i]%n] + n;
+        for (int i=0; i<n; i++)
+            if (array[i] >= n*2)
+                System.out.println(i + " ");
+    } // O(n)-time O(1)-space
+
+    // -----------------------------------------------------------------------------------------------------
+    static void mergeTwoSortedArray(int[] A, int[] B) {
+        Map<Integer, Boolean> map = new TreeMap<Integer, Boolean>(); // treeMap-O(log(n)) where hashMap is faster O(1)
+        // {treeMap result in sorted data where hasMap not}
+        for (int i=0; i<A.length; i++)
+            map.put(A[i], true);
+        for (int i=0; i<B.length; i++)
+            map.put(B[i], true);
+        // print
+        for (Map.Entry<Integer, Boolean> entry : map.entrySet())
+            System.out.print(entry.getKey() + " ");
+    } // O(nlog(n) + mlog(m))
+    
+    /* -----------------------------------------------------------------------------------------------------
+        [1,2], [2,4], [5,8], [7,10], [11,12]
+        result - [1,4], [5,10], [11,12] condition - will be if [0].end >= [1].start ...
+    */
+    static class Interval {
+        int start, end;
+        Interval(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+    }
+    static void mergeOverlappingIntervals(Interval[] array) {
+        int n = array.length;
+        if (n<=0) return;
+        Stack<Interval> stack = new Stack<>();
+        // sort
+        Arrays.sort(array, new Comparator<Interval>() {
+            @Override
+            public int compare(Interval i1, Interval i2) {
+                return i1.start-i2.start;
+            }
+        });
+        // push 1st in stack
+        stack.push(array[0]);
+        for (int i=1; i<n; i++) {
+            Interval top = stack.peek();
+            if (top.end < array[i].start) {
+                stack.push(array[i]);
+            }
+            else if (top.end < array[i].end) {
+                top.end = array[i].end;
+                stack.pop();
+                stack.push(top);
+            }
+        }
+        // print
+        while(!stack.isEmpty()) {
+            Interval interval = stack.pop();
+            System.out.print("[" + interval.start + "," + interval.end + "] ");
+        }
+    } // O(nlogn), which is for sorting. Once array of intervals is sorted, merging takes linear time.
+
+    // -----------------------------------------------------------------------------------------------------
+    static boolean subArrayWithSum0(int[] array) {
+        Set<Integer> hs = new HashSet<Integer>();
+        int sum = 0;
+        for (int i = 0; i < array.length; i++) {
+            sum += array[i];
+            if (sum == 0 || array[i] == 0 || hs.contains(sum))
+                return true;
+            hs.add(sum);
+        }
+        return false;
+    } // O(n)
+
+    // -----------------------------------------------------------------------------------------------------
+    static void factorialOfLargeNumber(int N) {
+        /*
+            BigInteger - use for mathematical operations which involves very big integer calculations that are outside limit of primitive data types.
+            int a,b;
+            BigInteger A,B;
+            a = 54, b = 23;
+            A = BigInteger.valueOf(54), B = BigInteger.valueOf(23);
+        */
+        BigInteger bigInteger = new BigInteger("1");
+        for (int i = 2; i <= N; i++)
+            bigInteger = bigInteger.multiply(BigInteger.valueOf(i));
+        System.out.println("factorial of large number: " + bigInteger);
     }
 
     // -----------------------------------------------------------------------------------------------------
+    static void maximumProductSubArray(int[] array) {
+        int result = array[0];
+        int n = array.length;
+        for (int i=0; i<n; i++) {
+            int mul = array[i];
+            for (int j=i+1; j<n; j++) {
+                result = Math.max(result, mul);
+                mul *= array[j];
+            }
+            result = Math.max(result, mul);
+        }
+        System.out.println(result);
+    } // O(n^2)
+
+    // -----------------------------------------------------------------------------------------------------
+    static boolean arrayIsSubsetOfAnotherArray(int[] A, int[] B) {
+        int m = A.length;
+        int n = B.length;
+        Set<Integer> set = new HashSet<Integer>();
+        for (int i = 0; i < m; i++)
+            set.add(A[i]);
+        int sizeOfSetA = set.size();
+        for (int i = 0; i < n; i++)
+            set.add(B[i]);
+        if (set.size() == sizeOfSetA)
+            return true;
+        return false;
+    } // O(m+n)
+
+    // -----------------------------------------------------------------------------------------------------
+    static void swap(int[] array, int x, int y) {
+        int swap = array[x];
+        array[x] = array[y];
+        array[y] = swap;
+    }
+    static void threeWayPartitioningOfArrayAroundGivenValue(int[] array, int lowValue, int highValue) {
+        int n = array.length;
+        int low = 0, high = n-1;
+        int mid = 0;
+        while (mid <= high) {
+            if (array[mid] < lowValue) {
+                swap(array, low, mid);
+                low++;
+                mid++;
+            } else if (array[mid] > highValue) {
+                swap(array, mid, high);
+                high--;
+            } else {
+                mid++;
+            }
+        }
+        System.out.println(Arrays.toString(array));
+    } // O(n)
+
+    /* -----------------------------------------------------------------------------------------------------
+        [1,2,3,4]
+        [2*3*4, 1*3*4, 1*2*4, 1*2*3] i.e [24, 12, 8, 6]
+    */
+    static void productOfArrayExceptSelf(int[] array) {
+        int n = array.length;
+        if (n == 1) {
+            System.out.println("0");
+            return;
+        }
+        int i, runningProduct = 1;
+        int[] product = new int[n];
+        for (int j=0; j<n; j++) {
+            product[j] = 1; // initialize whole array as 1
+        }
+        for (i=0; i<n; i++) { // temp variable contains product of elements on left side exlcuding array[i]
+            product[i] = runningProduct;
+            runningProduct *= array[i];
+        }
+        runningProduct = 1;
+        for (i=n-1; i>=0; i--) { // temp variable contains product of elements on right side exlcuding array[i]
+            product[i] *= runningProduct;
+            runningProduct *= array[i];
+        }
+        System.out.println(Arrays.toString(product));
+    } // O(n)
+
+    // -----------------------------------------------------------------------------------------------------
+    /* if you go to party of n people, find if there is any celebrity or not */
     static int celebrityProblem(int n) {
         int[][] matrix = {
             {0, 1, 0},
@@ -524,6 +754,7 @@ class Questions {
         int[] outdegree = new int[n];
         for (int i=0; i<n; i++) {
             for (int j=0; j<n; j++) {
+                // i knows j
                 if (matrix[i][j] == 1) {
                     indegree[j] += 1;
                     outdegree[i] += 1;
@@ -535,6 +766,12 @@ class Questions {
         outdegree = 1,0,0 -> 1,0,1
         */
         for (int k=0; k<n; k++) {
+            /*
+             * that person who doesn't know anybody, but everybody knows him
+             * indegree[k]  = 2
+             * outdegree[k] = 0
+             * return k
+            */
             if (indegree[k] == n-1 && outdegree[k] == 0)
                 return k;
         }
@@ -554,23 +791,121 @@ class Questions {
                 celebrity = i; // choose celebrity
         }
         for (int i=0; i<n; i++) {
-            if (i!=celebrity && (matrix[i][celebrity] == 0 || matrix[celebrity][i] == 1)) // i!=celebrity && i don't know celebrity || celebrity knows someone
-                return -1; // no celebrity present bcz i don't know cele || cele knows i
+            if (i!=celebrity && (matrix[i][celebrity] == 0 || matrix[celebrity][i] == 1)) // not itself a celebrity && (i don't know celebrity || celebrity knows someone) false conditions
+                return -1; // no celebrity present bcz i don't know celebrity || celebrity knows me
         }
         return celebrity;
     } // O(n)
 
     // -----------------------------------------------------------------------------------------------------
-    static void formBiggestNumberFromArray(int[] array) {}
+    static class Node implements Comparable<Node> {
+        int x, y, value;
+        Node(int x, int y, int value) {
+            this.x = x; // array index
+            this.y = y; // column index
+            this.value = value; // actual value
+        }
+        @Override
+        public int compareTo(Node o) {
+            return this.value - o.value;
+        }
+    }
+    static ArrayList<Integer> mergeKSortedArray(int[][] arrays) {
+        ArrayList<Integer> result = new ArrayList<Integer>();
+        PriorityQueue<Node> pq = new PriorityQueue<Node>();
+        for (int i = 0; i < arrays.length; i++) {
+            // put 1st element of each array (first column of element)
+            pq.add(new Node(i, 0, arrays[i][0]));
+        }
+        Node node = null;
+        while (!pq.isEmpty()) {
+            node = pq.poll();
+            result.add(node.value);
+            // if next element of current min node exists
+            if (node.y < arrays[node.x].length - 1) {
+                pq.add(new Node(node.x, node.y+1, arrays[node.x][node.y+1]));
+            }
+        }
+        return result;
+    } // O(nlogk)
+    static void mergeKSortedArray() {
+        int[][] matrix = {
+            {2,6,12},
+            {1,9},
+            {23,34,90,2000}
+        };
+        System.out.println(mergeKSortedArray(matrix).toString());
+    }
 
     // -----------------------------------------------------------------------------------------------------
-    static void nextPermutation(int[] array) {}
+    static void commonElementIn3SortedArray(int[] A, int[] B, int[] C) {}
+
+    // -----------------------------------------------------------------------------------------------------
+    static void rearrangeArrayAlternativelyNegativePositive() {}
+
+    // -----------------------------------------------------------------------------------------------------
+    static void minSwapsRequiredBringElementsLessThanEqual_K_Together() {}
+
+    // -----------------------------------------------------------------------------------------------------
+    static void minOperationsRequiredToMakeArrayPalindrome() {}
+
+    // -----------------------------------------------------------------------------------------------------
+    static void medianOf2SortedArraysOfEqualSize() {}
+
+    // -----------------------------------------------------------------------------------------------------
+    static void medianOf2SortedArraysOfDifferentSize() {}
 
     // -----------------------------------------------------------------------------------------------------
     static void kthSmallestElement(int[] array) {}
 
     // -----------------------------------------------------------------------------------------------------
     static void kthLargestElement(int[] array) {}
+
+    // -----------------------------------------------------------------------------------------------------
+    static void twoSum(int[] array, int sum) {
+        int n = array.length;
+        HashSet<Integer> map = new HashSet<>();
+        for (int i = 0; i < n; i++) {
+            int diff = sum - array[i];
+            if (map.contains(diff)) {
+                System.out.println(array[i] + " " + diff);
+            }
+            map.add(array[i]);
+        }
+        // Arrays.sort(array);
+        // int left = 0, right = n-1;
+        // while (left < right) {
+        //     if (array[left] + array[right] < sum)
+        //         left++;
+        //     else if (array[left] + array[right] > sum)
+        //         right--;
+        //     else if (array[left] + array[right] == sum) {
+        //         System.out.println(array[left] + " " + array[right]);
+        //         left++;
+        //     }
+        // }
+    }
+
+    // -----------------------------------------------------------------------------------------------------
+    static void threeSum(int[] array, int sum) {
+        int n = array.length;
+        for (int i = 0; i < n-2; i++) {
+            HashSet<Integer> set = new HashSet<Integer>();
+            int curr_sum = sum-array[i];
+            for (int j=i+1; j<n; j++) {
+                if (set.contains(sum-array[j])) {
+                    System.out.println(array[i] + " " + array[j] + " " + (curr_sum-array[j]));
+                }
+                set.add(array[j]);
+            }
+        }
+    } // O(n2)
+
+    // -----------------------------------------------------------------------------------------------------
+    static void formBiggestNumberFromArray(int[] array) {}
+
+    // -----------------------------------------------------------------------------------------------------
+    static void nextPermutation(int[] array) {}
 
     public static void main(String[] args) {
         // Interval[] interval = new Interval[5];
@@ -580,5 +915,11 @@ class Questions {
         // interval[3] = new Interval(7,10);
         // interval[4] = new Interval(11,12);
         // mergeOverlappingIntervals(interval);
+        // System.out.println(searchInSortedAndRotatedArray(new int[]{3,1}, 1));
+        // duplicatesInArray(new int[]{0,4,3,2,7,8,2,3,1});
+        // threeWayPartitioningOfArrayAroundGivenValue(new int[]{1,14,5,20,4,2,54,20,87,98,3,1,32}, 14, 20);
+        // tripletsOfGivenSum(new int[]{1,4,45,6,10,8}, 22);
+        // majorityElementK(new int[]{3,1,2,2,1,2,3,3}, 4);
+        mergeKSortedArray();
     }
 }

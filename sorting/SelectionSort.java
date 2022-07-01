@@ -1,7 +1,9 @@
+package sorting;
+
 import java.util.Arrays;
 
 public class SelectionSort {
-    /* take one smallest element and placed at front i.e 1 swap per iteration 
+    /* 2. take one smallest element and placed at front i.e 1 swap per iteration 
      * bubble and selection sort similar in that sense - array size decreasing,
      * in bubble sort we placing greater elements at last where in selection smallest elements at front.
     */

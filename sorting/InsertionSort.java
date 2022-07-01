@@ -1,8 +1,10 @@
+package sorting;
+
 import java.util.Arrays;
 
 public class InsertionSort {
 
-    /* divide array into two parts - sorted and unsorted, where we take element from unsorted and place that element into sorted
+    /* 3. divide array into two parts - sorted and unsorted, where we take element from unsorted and place that element into sorted
        result in increase in sorted part length */
     void sort(int[] array){
         int n = array.length;

@@ -4,6 +4,7 @@ import java.util.Collections;
 /*
  * when you compare instance of same class.
  * implemented by class which needs to define natural ordering for its objects.
+ * time complexity - either O(1) or O(2^n) depending upon implementation
 */
 
 class Movie implements Comparable<Movie> {

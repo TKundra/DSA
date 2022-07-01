@@ -6,6 +6,7 @@ import java.util.Comparator;
  * comparator pass at runtime when you don't want natural ordering
  * one class can have multiple comparator
  * allow precise control over sort order
+ * time complexity - O(nlogn): internally uses merge sort or dual pivot quick sort
 */
 
 class Movie implements Comparable<Movie> {
