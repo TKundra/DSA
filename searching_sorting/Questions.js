@@ -44,7 +44,7 @@ function resultIndices(array = [1, 3, 5, 5, 5, 5, 67, 123, 125], key = 5) {
 function fixedPointInArray(array = [15, 2, 45, 12, 7]) {
     const result = [];
     for (let i = 0; i < array.length; i++) {
-        if (array[i] === i + 1) {
+        if (array[i] === i) {
             result.push(array[i]);
         }
     }
@@ -52,14 +52,14 @@ function fixedPointInArray(array = [15, 2, 45, 12, 7]) {
 } // O(n) - time & O(n) - space
 
 // -------------------------------------------------------------------------------------------------------------------------------
-function searchInSortedAndRotatedArray(array = [5, 6, 7, 8, 9, 10, 1, 2, 3], key = 3) {
+function searchInSortedAndRotatedArray(array = [3,1], key = 1) {
     let n = array.length;
     let left = 0, right = n - 1;
     let mid;
     while (left <= right) {
         mid = parseInt((left + right) / 2);
         if (array[mid] === key) return mid;
-        if (array[left] < array[mid]) { // left part sorted
+        if (array[left] <= array[mid]) { // left part sorted
             // key < array[mid] bcz above we comparing array[mid] with key
             if (key >= array[left] && key < array[mid]) {
                 right = mid - 1;

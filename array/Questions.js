@@ -65,6 +65,15 @@ function binaryToDecimal() { }
 function decimalTobinary() { }
 
 // -------------------------------------------------------------------------------------------------------------------------------
+function concatArray(array) {
+    const result = [], n = array.length;
+    for (let i = 0; i < n * 2; i++) {
+        result[i] = array[i % n];
+    }
+    return result;
+}
+
+// -------------------------------------------------------------------------------------------------------------------------------
 function reverseArray(array = [1, 2, 3, 4, 5, 6]) {
     let i = 0;
     let j = array.length - 1;
@@ -268,13 +277,13 @@ function findDuplicatesInArray(array = [1, 2, 3, 4, 3, 5, 2, 6]) {
 } // O(n) time & O(n) space
 
 // -------------------------------------------------------------------------------------------------------------------------------
-function mergeTwoSortedArray(array1 = [1, 3, 5, 7], array2 = [2, 4, 6, 8]) {
+function mergeTwoSortedArray(array1 = [1, 2, 3], array2 = [2, 5, 6]) {
     const m = array1.length;
     const n = array2.length;
     const resultArray = [];
     let i = 0, j = 0, k = 0;
     while (i < m && j < n) {
-        if (array1[i] < array2[j]) {
+        if (array1[i] <= array2[j]) {
             resultArray[k] = array1[i];
             i++;
         } else {
@@ -612,6 +621,20 @@ function leftRotateArrayByK(array = [1, 2, 3, 4, 5, 6, 7], k = 2) {
     return array;
 } // O(n*d) - time & O(1) - space
 
+function leftRotateArrayByKTimeOptimized(array = [1, 2, 3, 4, 5, 6, 7], k = 2) {
+    let temp = [...nums];
+    for (let i = 0; i < temp.length; i++) {
+        /*  for each element index, find the index position where you want to move that element. e.g 
+            if your current position is i=1, then you want to move nums[i] to i+k position. and 
+            if suppose for first example, if your i= 5, then i+k = 5+3 = 8. now 8 becomes out of range index. 
+            so 8 % nums.length = 8 % 7 = 1. means that whent i=5, then nums[5] will move to 1 index position or nums[1] = temp[5]
+        */
+        let p = (i + k) % temp.length;
+        nums[p] = temp[i];
+    }
+    return nums;
+} // O(n) - time
+
 // -------------------------------------------------------------------------------------------------------------------------------
 function leadersInArray(array = [16, 17, 4, 3, 5, 2]) {
     let resultIndex = 0;
@@ -818,7 +841,7 @@ function maximumProductSubArrayOptimized(array = [2, 3, -2, 4]) {
 } // O(n) - time & O(1) - space
 
 function maximumProductSubArrayOptimizedEasy(array = [2, 3, -2, 4]) {
-    let answer = Number.MIN_VALUE;
+    let answer = array[0];
     let product = 1, n = array.length;
     for (let i = 0; i < n; i++) {
         product *= array[i];
@@ -1001,6 +1024,24 @@ function commonElementIn3SortedArray(
 } // O(n1 + n2 + n3) - time & O(1) - space
 
 // -------------------------------------------------------------------------------------------------------------------------------
+function majorityElement(array) {
+    array.sort((a, b) => a - b);
+    let count = 0, n = array.length;
+    for (let i = 0; i < n - 1; i++) {
+        if (array[i] !== array[i + 1]) {
+            count = 0;
+        } else {
+            count++;
+        }
+
+        if (count >= Math.floor(n / 2)) {
+            return array[i];
+        }
+    }
+    return 0;
+} // O(n) - time & O(1) - space
+
+// -------------------------------------------------------------------------------------------------------------------------------
 function waveArray(array = [10, 90, 49, 2, 1, 5, 23]) {
     let n = array.length;
     for (let i = 1; i < n; i += 2) {
@@ -1050,20 +1091,24 @@ function rearrangeArrayAlternativelyPositiveAndNegativeItems(array = [9, -3, 5, 
 function productOfArrayExceptSelf(array = [1, 2, 3, 4]) {
     let left = [], right = [], product = [], n = array.length;
     left[0] = array[0];
-    right[n - 1] = array[n-1];
+    right[n - 1] = array[n - 1];
 
-    // store cumulative product
+    // store cumulative product - [ 1, 2, 6, 24 ]
     for (let i = 1; i < n; i++) {
         left[i] = array[i] * left[i - 1];
     }
+
+    // store cumulative product - [ 24, 24, 12, 4 ]
     for (let i = n - 2; i >= 0; i--) {
         right[i] = array[i] * right[i + 1];
     }
 
     product[0] = right[1]; // at 0th store product of elements till index 1 from right cumulative array
-    product[n-1] = left[n-2]; // at n-1th store product of elements till index n-2 from left cumulative array
+    product[n - 1] = left[n - 2]; // at n-1th store product of elements till index n-2 from left cumulative array
+
+    // product array - [24, null, null, 6]
     for (let i = 1; i < n - 1; i++) {
-        product[i] = left[i-1] * right[i+1];
+        product[i] = left[i - 1] * right[i + 1];
     }
     return product;
 } // O(n) - time & O(n) - space
@@ -1117,13 +1162,13 @@ function minimumNumberOfJumpsToReachEnd() { }
 
 // -------------------------------------------------------------------------------------------------------------------------------
 function mergeIntervals() {
-    const intervals = [[1, 3], [2, 4], [6, 8], [9, 10]].sort((a, b) => a[0] - b[0]);
+    const intervals = [[1, 4], [4, 5]].sort((a, b) => a[0] - b[0]);
 
     const stack = new Stack();
     stack.push(intervals[0]);
 
     for (let i = 1; i < intervals.length; i++) {
-        if (intervals[i][0] < stack.peek()[1] && intervals[i][1] > stack.peek()[1]) {
+        if (intervals[i][0] <= stack.peek()[1] && intervals[i][1] >= stack.peek()[1]) {
             const temp = stack.pop();
             temp[1] = intervals[i][1];
             stack.push(temp)
@@ -1171,7 +1216,7 @@ function printNumbersWithoutLoop(element, original) {
 function palindromeChecker(value) {
     value = String(value).split('');
     const n = value.length;
-    let i = 0, j = n-1;
+    let i = 0, j = n - 1;
     while (i < j) {
         if (value[i] !== value[j]) {
             return false;
@@ -1192,313 +1237,69 @@ function check() {
     return 1;
 }
 
-/*
-DONE    Find pair with given sum in the array
-DONE    Check if subarray with 0 sum is exists or not
-DONE    Print all sub-arrays with 0 sum
-DONE    Sort an array containing 0’s, 1’s and 2’s (Dutch National Flag Problem)
-Sort binary array in linear time
-Find a duplicate element in a limited range array
-Find maximum length sub-array having given sum
-Find maximum length sub-array having equal number of 0’s and 1’s
-Find maximum product of two integers in an array
-
-In place merge two sorted arrays
-Merge two arrays by satisfying given constraints
-Find index of 0 to replace to get maximum length sequence of continuous ones
-Shuffle a given array of elements (Fisher–Yates shuffle)
-Rearrange the array with alternate high and low elements
-Find equilibrium index of an array
-Find largest sub-array formed by consecutive integers
-Find majority element (Boyer–Moore Majority Vote Algorithm)
-DONE    Move all zeros present in the array to the end
-Replace each element of array with product of every other element without using / operator
-Find Longest Bitonic Subarray in an array
-Longest Increasing Subsequence
-Find maximum difference between two elements in the array by satisfying given constraints
-DONE    Maximum Sum Subarray Problem (Kadane’s Algorithm)
-Print continuous subarray with maximum sum
-Maximum Sum Circular Subarray
-Find all distinct combinations of given length — I
-Find all distinct combinations of given length with repetition allowed
-Find maximum sequence of continuous 1’s formed by replacing at-most k zeroes by ones
-Find minimum sum subarray of given size k
-Find maximum product subarray in a given array
-Find subarray having given sum in given array of integers
-Find the length of smallest subarray whose sum of elements is greater than the given number
-Find largest number possible from set of given numbers
-Find the smallest window in array sorting which will make the entire array sorted
-Find maximum sum path involving elements of given arrays
-Maximum profit earned by buying and selling shares any number of times
-Trapping Rain Water within given set of bars
-Find minimum platforms needed in the station so to avoid any delay in arrival of any train
-Decode the array constructed from another array
-Sort an array using one swap
-DONE    Find Triplet with given sum in an array
-Length of longest continuous sequence with same sum in given binary arrays
-Reverse every consecutive m elements of the given subarray
-Maximum Product Subset Problem
-Find pairs with given difference k in the array
-Find pairs with given difference k in the array | Constant space solution
-4 sum problem | Quadruplets with given sum
-Print all quadruplets with given sum | 4-sum problem extended
-Quickselect Algorithm
-Rearrange array such that A[A[i]] is set to i for every element A[i]
-Print all Triplets that forms Arithmetic Progression
-Print all Triplets that forms Geometric Progression
-Print all combination of numbers from 1 to n having sum n
-Replace each element of the array by its corresponding rank in the array
-Print all Triplets in an array with sum less than or equal to given number
-Group elements of an array based on their first occurrence
-Find minimum difference between index of two given elements present in the array
-Find maximum absolute difference between sum of two non-overlapping sub-arrays
-Find all Symmetric Pairs in an Array of Pairs
-Partition an array into two sub-arrays with the same sum
-Find count of distinct elements in every sub-array of size k
-Find two numbers with maximum sum formed by array digits
-Print all sub-arrays of an array having distinct elements
-Find a Triplet having Maximum Product in an Array
-Find Minimum Index of Repeating Element in an Array
-Generate random input from an array according to given probabilities
-Find pair in an array having minimum absolute sum
-Find Index of Maximum Occurring Element with Equal Probability
-Check if an Array is Formed by Consecutive Integers
-Find two non-overlapping pairs having same sum in an array
-Add elements of two arrays into a new array
-Find Minimum Product among all Combinations of Triplets in an Array
-Replace every element of an array with the least greater element on its right
-Find all odd occurring elements in an array having limited range of elements
-Count the distinct absolute values in the sorted array
-Print all combinations of positive integers in increasing order that sum to a given number
-Find all distinct combinations of given length — II
-Find subarrays with given sum in an array
-Find the surpasser count for each element of an array
-Find maximum length sequence of continuous ones (Using Sliding Window)
-Find maximum length sequence of continuous ones
-Find index that divides an array into two non-empty subarrays of equal sum
-Calculate frequency of all elements present in an array of specified range
-Rearrange the array such that it contains positive and negative numbers at alternate positions
-Find a sorted triplet in the given array
-Shuffle an array according to the given order of elements
-Count number of strictly increasing sub-arrays in an array
-Find duplicates within given range k in an array
-Longest Alternating Subarray Problem
-Find minimum range with at-least one element from each of the given arrays
-Find longest subsequence formed by consecutive integers
-Find all elements in an array that are greater than all elements present to their right
-Find missing number in array without using extra space
-Determine index of an element in given array which satisfies given constraints
-Find minimum moves required for converting a given array to an array of zeroes
-Left rotate an array
-Right rotate an array k times
-Find maximum profit earned from at most two stock transactions
-Find Frequency of each element in a sorted array containing duplicates
-Find Minimum and Maximum element in an array using minimum comparisons
-Difference between Subarray, Subsequence and Subset
-Find odd occurring element in an array in single traversal
-Find odd occurring element in logarithmic time
-Find two odd occurring elements in an array without using any extra space
-Check if given array represents min heap or not
-Find K’th smallest element in an array
-Find K’th largest element in an array
-Sort a K-Sorted Array
-Merge M sorted lists of variable length
-Find smallest range with at-least one element from each of the given lists
-Merge M sorted lists each containing N elements
-Find maximum sum of subsequence with no adjacent elements
-Find ways to calculate a target from elements of specified array
-Sort elements by their frequency and Index
-Sort an array based on order defined by another array
-Inversion Count of an array
-Segregate positive and negative integers in linear time
-Find number of rotations in a circularly sorted array
-Search an element in a circular sorted array
-Find first or last occurrence of a given number in a sorted array
-Count occurrences of a number in a sorted array with duplicates
-Find smallest missing element from a sorted array
-Find Floor and Ceil of a number in a sorted array
-Search in a nearly sorted array in logarithmic time
-Find number of 1’s in a sorted binary array
-Find Missing Term in a Sequence in Logarithmic time
-Find missing number and duplicate elements in an array
-Find the peak element in an array
-Find Floor and Ceil of a number in a sorted array (Recursive solution)
-Print all distinct subsets of a given set
-Find two duplicate elements in a limited range array (using XOR)
-Combinations of words formed by replacing given numbers with corresponding alphabets
-0–1 Knapsack Problem
-Subset sum Problem
-Partition Problem
-3-Partition Problem
-3-partition problem extended | Print all partitions
-K-Partition Problem | Printing all Partitions
-Minimum Sum Partition Problem
-Rod Cutting
-Longest Alternating Subsequence Problem
-Coin change-making problem (unlimited supply of coins)
-Coin Change Problem — Find total number of ways to get the denomination of coins
-Find maximum profit earned from at most K stock transactions
-*/
-
-/*
-Given an array of integers, find the maximum sum of any contiguous subarray. (Kadane's algorithm)
-
-Given an array of integers, find two elements that sum up to a given target. (Two Sum problem)
-
-Given an array of integers, find three elements that sum up to a given target. (Three Sum problem)
-
-Given a sorted array of integers, find the index of a target element. (Binary search)
-
-Given an array of integers, find the largest element that appears at least twice. (Find the Duplicate Number)
-
-Given an array of integers, rotate the array to the right by k steps. (Rotate Array)
-
-Given an array of integers, rearrange the elements in such a way that all even numbers appear before all odd numbers. (Sort Array By Parity)
-
-Given an array of integers, find the majority element (appears more than n/2 times). (Majority Element)
-
-Given an array of integers, find the shortest subarray that, when sorted, makes the entire array sorted. (Shortest Unsorted Continuous Subarray)
-
-Given an array of integers, find the minimum difference between any two elements in the array. (Minimum Absolute Difference)
-
-Given two sorted arrays, find their median. (Median of Two Sorted Arrays)
-
-Given an array of integers, rearrange the array such that every other element is greater than its adjacent elements. (Wiggle Sort)
-
-Given an array of integers, find the maximum product of any three elements. (Maximum Product of Three Numbers)
-
-Given an array of integers, find the minimum number of jumps required to reach the end of the array. (Jump Game II)
-
-Given a matrix of integers, rotate the matrix 90 degrees clockwise. (Rotate Image)
-
-Given an array of integers, determine if it is possible to split the array into two subarrays with equal sum. (Partition Equal Subset Sum)
-
-Given an array of integers, find the length of the longest increasing subsequence. (Longest Increasing Subsequence)
-
-Given a matrix of integers, find the maximum sum of any rectangular submatrix. (Maximum Sum Submatrix)
-
-Given an array of integers, find the kth largest element in the array. (Kth Largest Element in an Array)
-
-Given a matrix of integers, find the minimum path sum from the top left to the bottom right corner. (Minimum Path Sum)
-
-Given a sorted array of integers with duplicates, remove all duplicates and return the new length of the array. (Remove Duplicates from Sorted Array)
-
-Given an array of integers, find the length of the longest continuous increasing subsequence. (Longest Continuous Increasing Subsequence)
-
-Given an array of integers, rotate the array to the right by k steps in-place. (Rotate Array)
-
-Given an array of integers, find the maximum length of a subarray with sum less than or equal to a given target. (Maximum Size Subarray Sum Equals k)
-
-Given an array of integers, find the maximum length of a subarray with equal number of 0s and 1s. (Contiguous Array)
-
-Given an array of integers, find the minimum sum of a subarray of size k. (Minimum Size Subarray Sum)
-
-Given an array of integers, find the maximum profit that can be made by buying and selling stocks. (Best Time to Buy and Sell Stock)
-
-Given a matrix of integers, find the kth smallest element in the matrix. (Kth Smallest Element in a Sorted Matrix)
-
-Given an array of integers, rearrange the array such that the even-indexed elements are greater than or equal to the odd-indexed elements. (Peaks and Valleys)
-
-Given an array of integers, find the length of the longest subarray with no more than two distinct elements. (Longest Substring with At Most Two Distinct Characters)
-
-Given an array of integers, find the smallest subarray with a sum greater than or equal to a given target. (Minimum Size Subarray Sum)
-
-Given an array of integers, find the maximum length of a subarray with no repeating elements. (Longest Substring Without Repeating Characters)
-
-Given an array of integers, find all unique triplets that add up to zero. (3Sum)
-
-Given an array of integers, find the maximum length of a subarray with sum equal to zero. (Maximum Length of Subarray With Sum Equals 0)
-
-Given an array of integers, rotate the array to the left by k steps. (Rotate Array)
-
-Given a matrix of integers, find the length of the longest increasing path. (Longest Increasing Path in a Matrix)
-
-Given an array of integers, find the maximum sum of a subarray with no adjacent elements. (Maximum Sum of Non-Adjacent Elements)
-
-Given a matrix of integers, determine whether it is a Toeplitz matrix (i.e., all diagonal elements are equal). (Toeplitz Matrix)
-
-Given an array of integers, find the maximum length of a subarray with alternating positive and negative elements. (Maximum Length of Subarray With Alternating Positive and Negative Elements)
-
-Given a matrix of integers, find the shortest path from the top left to the bottom right corner, with the ability to move in any of the four cardinal directions. (Shortest Path in Binary Matrix)
-
-Given an array of integers, find the k closest elements to a given value x. (Find K Closest Elements)
-
-Given a matrix of integers, find the number of islands (i.e., connected components) of 1s. (Number of Islands)
-
-Given an array of integers, find the maximum number of intervals that are non-overlapping. (Non-overlapping Intervals)
-
-Given a matrix of integers, find the longest path from any cell to any other cell, with the constraint that the path must be strictly increasing. (Longest Increasing Path in a Matrix)
-
-Given an array of integers, find the smallest missing positive integer. (First Missing Positive)
-
-Given a matrix of integers, find the largest square of 1s. (Maximal Square)
-
-Given an array of integers, find the number of pairs of elements that add up to a given sum. (Two Sum)
-
-Given a matrix of integers, find the shortest path from a given starting cell to a given ending cell, with the ability to move in any of the four cardinal directions and diagonal directions. (Shortest Path in a Grid with Obstacles Elimination)
-
-Given an array of integers, find the longest increasing subsequence that ends at each position. (Longest Increasing Subsequence II)
-
-Given a matrix of integers, find the minimum number of steps required to move from the top left corner to the bottom right corner, with the ability to move in any of the four cardinal directions and diagonal directions. (Minimum Path in Triangle)
-
-Given an array of integers, find the maximum subarray product. (Maximum Product Subarray)
-
-Given a matrix of integers, find the number of unique paths from the top left corner to the bottom right corner, with the ability to move only right and down. (Unique Paths)
-
-Given an array of integers, find the maximum length of a subarray with at most k distinct elements. (Longest Subarray with At Most K Distinct Elements)
-
-Given a matrix of integers, find the largest rectangular submatrix of 1s. (Maximal Rectangle)
-
-Given an array of integers, find the minimum number of operations required to make all elements of the array equal. (Minimum Moves to Equal Array Elements)
-
-Given a matrix of integers, find the shortest path from the top left corner to the bottom right corner, with the ability to move only down or right and to pass through a specific set of cells. (Shortest Path in a Grid with Obstacles)
-
-Given an array of integers, find the length of the longest increasing subsequence. (Longest Increasing Subsequence)
-
-Given a matrix of integers, find the length of the longest path from any cell to any other cell, with the constraint that the path must be strictly increasing or decreasing. (Longest Increasing Path in a Matrix)
-
-Given an array of integers, find the maximum sum of a subsequence with no consecutive elements. (Maximum Sum of Non-Consecutive Elements)
-
-Given a matrix of integers, find the longest path from any cell to any other cell, with the constraint that the path must be strictly increasing or decreasing and with the ability to move in any of the four cardinal directions. (Longest Increasing Path in a Grid)
-
-Given an array of integers, find the longest subarray with equal number of 0s and 1s. (Contiguous Array)
-
-Given a matrix of integers, find the kth smallest element in the matrix. (Kth Smallest Element in a Sorted Matrix)
-
-Given an array of integers, find the maximum sum subarray such that no two elements are adjacent. (Maximum Sum of Non-Adjacent Elements)
-
-Given a matrix of integers, find the longest common subsequence between two strings. (Longest Common Subsequence)
-
-Given an array of integers, find the length of the longest subarray with all elements distinct. (Longest Subarray with Distinct Elements)
-
-Given a matrix of integers, find the length of the longest path from any cell to any other cell, with the constraint that the path must be strictly increasing or decreasing and with the ability to move in any of the eight directions. (Longest Increasing Path in a Grid II)
-
-Given an array of integers, find the minimum number of operations required to make all elements of the array divisible by a given integer k. (Minimum Moves to Make Array Elements Divisible by K)
-
-Given a matrix of integers, find the longest path from any cell to any other cell, with the constraint that the path must be strictly increasing or decreasing and with the ability to move only up, down, left or right. (Longest Increasing Path in a Grid III)
-
-Given an array of integers, find the minimum length of a subarray that contains all elements of another array. (Minimum Size Subarray Sum)
-
-Given a matrix of integers, find the shortest path from the top left corner to the bottom right corner, with the ability to move only down or right and to pass through a specific set of cells exactly once. (Shortest Path Visiting All Nodes)
-
-Given an array of integers, find the maximum sum of a subarray with at least k elements. (Max Sum of Subarray of Size K)
-
-Given a matrix of integers, find the largest square submatrix of 1s. (Maximal Square)
-
-Given an array of integers, find the longest subarray with sum equal to a given target. (Subarray Sum Equals K)
-
-Given a matrix of integers, find the length of the longest increasing path from any cell to any other cell, with the ability to move only up or left. (Longest Increasing Path in a Grid IV)
-
-Given an array of integers, find the minimum number of increments or decrements required to make all elements of the array equal. (Minimum Moves to Equal Array Elements II)
-
-Given a matrix of integers, find the minimum cost path from the top left corner to the bottom right corner, with the ability to move only down, right, or diagonally down-right. (Minimum Path Sum)
-
-Given an array of integers, find the length of the longest subarray with at least one repeated element. (Longest Subarray with at Least One Repeated Element)
-
-Given a matrix of integers, find the length of the longest increasing path from any cell to any other cell, with the constraint that the path must be strictly increasing and with the ability to move in any of the four cardinal directions. (Longest Strictly Increasing Path in a Grid)
-
-Given an array of integers, find the maximum length of a subarray with sum at most k. (Maximum Size Subarray Sum Equals K)
-
-Given a matrix of integers, find the minimum steps required to move a robot from the top left corner to the bottom right corner, with the ability to move only down, right, or diagonally down-right, and with certain cells being impassable. (Minimum Moves to Reach Target with Obstacles)
-
-*/
+// -------------------------------------------------------------------------------------------------------------------------------
+function twoSum(array, target) {
+    array.sort((a, b) => a-b);
+    let start = 0, end = array.length-1;
+    while (start < end) {
+        const sum = array[start] + array[end];
+        if (sum === target) {
+            return [start, end];
+        } else if (sum < target) {
+            start++;
+        } else {
+            end--;
+        }
+    }
+    return [-1, -1];
+} // O(nlogn) - time & O(1) - space
+
+// -------------------------------------------------------------------------------------------------------------------------------
+function threeSum(array) {
+    const set = new Set();
+    const result = [];
+    array.sort((a, b) => a-b);
+
+    const n = array.length;
+
+    for (let i = 0; i < n-2; i++) {
+        let left = i+1, right = n-1;
+        while (left < right) {
+            const sum = array[i] + array[left] + array[right];
+            if (sum === 0) {
+                const key = `${array[i]}, ${array[left]}, ${array[right]}`;
+                if (!set.has(key)) {
+                    result.push([array[i], array[left], array[right]]);
+                    set.add(key);
+                }
+                left++;
+                right--;
+            } else if (sum > 0) {
+                right--;
+            } else {
+                left++;
+            }
+        }
+    }
+
+    return result;
+}
+
+// -------------------------------------------------------------------------------------------------------------------------------
+function slidingWindowMaximum(array, k) {
+    const n = array.length;
+    const result = [];
+    
+    for (let i = 0; (i+k-1) < n; i++) {
+        let currentMax = array[i];
+        for (let j = i; j < (i+k); j++) {
+            currentMax = Math.max(currentMax, array[j])
+        }
+        result.push(currentMax)
+    }
+
+    return result;
+} // O(n*k) - time & O(n) - space {for result array}
+
+// -------------------------------------------------------------------------------------------------------------------------------
+function minimumJumpsToReachEnd() { }

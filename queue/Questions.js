@@ -1,6 +1,13 @@
 import Queue from './QueueLL.js';
 import Stack from '../stack/StackLL.js';
 
+class Pair {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+}
+
 function reverseQueueUsingRecursion(queue) {
     if (queue.isEmpty()) {
         return;
@@ -44,13 +51,6 @@ function interleaveFirstSecondHalfQueue(queue) {
 } // O(n)
 
 // -------------------------------------------------------------------------------------------------------------------------------
-class Pair {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-    }
-}
-
 class RottenOrange {
     constructor(matrix) {
         this.row = matrix.length;
@@ -153,3 +153,62 @@ console.log(new RottenOrange([
 */
 
 // -------------------------------------------------------------------------------------------------------------------------------
+class FloodFill {
+    constructor(screen, oldColor, newcolor) {
+        this.row = screen.length;
+        this.column = screen[0].length;
+        this.screen = screen;
+        this.oldColor = oldColor;
+        this.newcolor = newcolor;
+    }
+
+    isValid(x, y) {
+        return x >= 0 && x < this.row && y >= 0 && y < this.column && this.screen[x][y] !== this.newColor && this.screen[x][y] === this.oldColor;
+    }
+
+    solve(x, y) {
+        let pair = new Pair(x, y);
+        let queue = new Queue();
+        queue.enqueue(pair);
+
+        this.screen[pair.x][pair.y] = this.newcolor;
+
+        while (!queue.isEmpty()) {
+            pair = queue.dequeue();
+
+            if(this.isValid(pair.x-1, pair.y)) {
+                this.screen[pair.x-1][pair.y] = this.newcolor;
+                queue.enqueue(new Pair(pair.x-1, pair.y));
+            }
+            if(this.isValid(pair.x+1, pair.y)) {
+                this.screen[pair.x+1][pair.y] = this.newcolor;
+                queue.enqueue(new Pair(pair.x+1, pair.y));
+            }
+            if(this.isValid(pair.x, pair.y-1)) {
+                this.screen[pair.x][pair.y-1] = this.newcolor;
+                queue.enqueue(new Pair(pair.x, pair.y-1));
+            }
+            if(this.isValid(pair.x, pair.y+1)) {
+                this.screen[pair.x][pair.y+1] = this.newcolor;
+                queue.enqueue(new Pair(pair.x, pair.y+1));
+            }
+
+        }
+
+        return this.screen;
+    }
+}
+/*
+const screen = [
+    [1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 0, 0],
+    [1, 0, 0, 1, 1, 0, 1, 1],
+    [1, 2, 2, 2, 2, 0, 1, 0],
+    [1, 1, 1, 2, 2, 0, 1, 0],
+    [1, 1, 1, 2, 2, 2, 2, 0],
+    [1, 1, 1, 1, 1, 2, 1, 1],
+    [1, 1, 1, 1, 1, 2, 2, 1]
+];
+const solution = new FloodFill(screen, screen[3][1], 3)
+console.log(solution.solve(3,1))
+*/
