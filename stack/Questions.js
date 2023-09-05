@@ -243,41 +243,47 @@ function prefixToPostfix(expression = '*-a/bc-/akl') {
 } // O(n)
 
 // -------------------------------------------------------------------------------------------------------------------------------
-function insertAtBottom(topElement, stack) {
-    if (stack.isEmpty()) {
-        stack.push(topElement);
+const stackR = new Stack();
+stackR.push(1);
+stackR.push(3);
+stackR.push(2);
+stackR.push(4);
+
+function insertAtBottom(topElement) {
+    if (stackR.isEmpty()) {
+        stackR.push(topElement);
         return;
     }
-    let element = stack.pop();
-    insertAtBottom(topElement, stack);
-    stack.push(element);
+    let element = stackR.pop();
+    insertAtBottom(topElement);
+    stackR.push(element);
 }
 
-function reverseStackRecursively(stack) {
-    if (stack.isEmpty()) {
+function reverseStackRecursively() {
+    if (stackR.isEmpty()) {
         return;
     }
-    let topElement = stack.pop();
-    reverseStackRecursively(stack)
-    insertAtBottom(topElement, stack)
+    let topElement = stackR.pop();
+    reverseStackRecursively()
+    insertAtBottom(topElement)
 } // O(n^2)
 
 // -------------------------------------------------------------------------------------------------------------------------------
-function sortInsert(topElement, stack) {
-    if (stack.isEmpty() || topElement > stack.peek()) {
-        stack.push(topElement);
+function sortInsert(topElement) {
+    if (stackR.isEmpty() || topElement > stackR.peek()) {
+        stackR.push(topElement);
         return;
     }
-    let element = stack.pop();
-    sortInsert(topElement, stack);
-    stack.push(element);
+    let element = stackR.pop();
+    sortInsert(topElement);
+    stackR.push(element);
 }
 
-function sortStackRecursively(stack) {
-    if (stack.isEmpty()) { return; }
-    let topElement = stack.pop();
-    sortStackRecursively(stack)
-    sortInsert(topElement, stack);
+function sortStackRecursively() {
+    if (stackR.isEmpty()) { return; }
+    let topElement = stackR.pop();
+    sortStackRecursively()
+    sortInsert(topElement);
 } // O(n^2)
 
 // -------------------------------------------------------------------------------------------------------------------------------
@@ -335,7 +341,7 @@ function findNextSmallerElement(expression = [4, 8, 5, 2, 25]) {
 
 // -------------------------------------------------------------------------------------------------------------------------------
 function largestRectagularAreaInHistogramBF(array = [3, 5, 1, 4]) {
-    let result = 0;
+    let result = array[0];
     for (let i = 0; i < array.length; i++) {
         let minHeight = Number.MAX_VALUE;
         for (let j = i; j < array.length; j++) {
@@ -384,7 +390,7 @@ function stackPermutations(expression1 = [1,2,3], expression2 =[2,1,3]) {
             j++;
         }
     }
-    return stack.isEmpty() ? true : false;
+    return stack.isEmpty();
 } // O(n)
 
 // -------------------------------------------------------------------------------------------------------------------------------

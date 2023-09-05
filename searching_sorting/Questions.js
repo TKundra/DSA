@@ -59,7 +59,7 @@ function searchInSortedAndRotatedArray(array = [3,1], key = 1) {
     while (left <= right) {
         mid = parseInt((left + right) / 2);
         if (array[mid] === key) return mid;
-        if (array[left] <= array[mid]) { // left part sorted
+        if (array[left] <= array[mid]) { // left part sorted - checking because we have to implement binary search logic
             // key < array[mid] bcz above we comparing array[mid] with key
             if (key >= array[left] && key < array[mid]) {
                 right = mid - 1;

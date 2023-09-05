@@ -53,10 +53,9 @@ loopedNode.next.next.next.next.next.next.next.next.next = loopedNode.next.next.n
 
 /* ----------------- simple linked list ----------------- */
 const LL = new LinkedList();
-LL.insertAtStart(1);
+LL.insertAtEnd(1);
 LL.insertAtEnd(2);
-LL.insertAtEnd(3);
-LL.insertAtEnd(4);
+LL.insertAtEnd(2);
 LL.insertAtEnd(1);
 /* ------------------------------------------------------ */
 
@@ -192,6 +191,7 @@ function removeDuplicatesInSortedLL(head) {
             currentNode = currentNode.next;
         }
     }
+    return head;
 } // O(n)
 
 // -------------------------------------------------------------------------------------------------------------------------------
@@ -269,7 +269,7 @@ function middleElementOfLinkedList(head) {
     if (head === null) return null;
     let slowPointer = head;
     let fastPointer = head;
-    while (fastPointer !== null && fastPointer.next !== null && fastPointer.next.next !== null) {
+    while (fastPointer !== null && fastPointer.next !== null) {
         slowPointer = slowPointer.next;
         fastPointer = fastPointer.next.next;
     }
@@ -336,7 +336,7 @@ function deleteNodeWithoutHeadPointer(node) {
 
 // -------------------------------------------------------------------------------------------------------------------------------
 function nthElementFromFront(head, pos) {
-    if (head === null || pos < 1 || pos > LL.length(head)) return -1;
+    if (head === null || pos < 0 || pos > LL.length(head)) return -1;
     let currentNode = head;
     for (let i = 1; i < pos; i++) {
         currentNode = currentNode.next;
@@ -346,7 +346,7 @@ function nthElementFromFront(head, pos) {
 
 // -------------------------------------------------------------------------------------------------------------------------------
 function nthElementFromLast(head, pos) {
-    if (head === null || pos < 1 || pos > LL.length(head)) return -1;
+    if (head === null || pos < 0 || pos > LL.length(head)) return -1;
     let currentNode = head;
     for (let i = 1; i < (LL.length(head) - pos + 1); i++) {
         currentNode = currentNode.next;
@@ -522,11 +522,21 @@ function addTwoNumberRepresentedByLinkedList(head1, head2) {
 } // O(n)
 
 // -------------------------------------------------------------------------------------------------------------------------------
+function middleElementOfLinkedListforMergeSort(head) {
+    if (!head) return head;
+    let slowPointer = head;
+    let fastPointer = head;
+    while (fastPointer !== null && fastPointer.next !== null && fastPointer.next.next !== null) {
+        slowPointer = slowPointer.next;
+        fastPointer = fastPointer.next.next;
+    }
+    return slowPointer;
+}
 function mergeSortForLinkedList(head) {
     if (head === null || head.next === null) return head;
 
     // break linked list into two halves
-    let mid = middleElementOfLinkedList(head);
+    let mid = middleElementOfLinkedListforMergeSort(head);
     let left = head;
     let right = mid.next;
     mid.next = null;
@@ -602,7 +612,7 @@ function cloneLinkedListWithNextAndRandomPointerNSpace(head) {
     }
 
     return clone.get(head);
-} // O(n)
+} // time - O(n) & space - O(n)
 
 function cloneLinkedListWithNextAndRandomPointer1Space(head) {
     let currentNode = head;
@@ -642,7 +652,7 @@ function cloneLinkedListWithNextAndRandomPointer1Space(head) {
     }
 
     return dummy.next;
-} // O(n)
+} // time - O(n) & space - O(1)
 
 function printNodeR(head) {
     let currentNode = head;
@@ -713,15 +723,6 @@ function reverseDoublyLinkedList(head) {
     }
     return head;
 } // O(n)
-
-// -------------------------------------------------------------------------------------------------------------------------------
-function multiplyTwoNumberRepresentedByLinkedList() { }
-
-// -------------------------------------------------------------------------------------------------------------------------------
-function quickSortForLinkedList() { }
-
-// -------------------------------------------------------------------------------------------------------------------------------
-function mergekSortedLinkedList() { } // important
 
 // -------------------------------------------------------------------------------------------------------------------------------
 // 5. print flatten list
@@ -818,25 +819,159 @@ function flattenLinkedList(head) {
 // printFlattenList(flattenLinkedList(nodef))
 
 // -------------------------------------------------------------------------------------------------------------------------------
-function removeNthNodeFromLast() { } // important
+// [5,2,13,3,8] to [13,8] i.e Remove every node which has a node with a strictly greater value anywhere to the right side of it.
+function removeNodes(head) {
+    head = reverseLinkedList(head);
+
+    let currentNode = head;
+    while (currentNode.next !== null) {
+        if (currentNode.next.key < currentNode.key) {
+            currentNode.next = currentNode.next.next
+        } else {
+            currentNode = currentNode.next;
+        }
+    }
+
+    head = reverseLinkedList(head);
+    return head;
+};
+
+// -------------------------------------------------------------------------------------------------------------------------------
+/*
+from - [1,2,3,4,5], k = 2
+to   - [1,4,3,2,5]
+
+from - [7,9,6,6,7,8,3,0,9,5], k = 5
+to   - [7,9,6,6,8,7,3,0,9,5]
+
+Return the head of the linked list after swapping the values 
+of the kth node from the beginning and the kth node from the end (the list is 1-indexed).
+*/
+function swapNodes(head, k) {
+    function lengthOfList(head) {
+        let length = 0;
+        while (head !== null) {
+            length++;
+            head = head.next;
+        }
+        return length;
+    }
+
+    let currentNode = head;
+
+    const n = lengthOfList(currentNode);
+
+    if (n <= 1) {
+        return head;
+    }
+
+    let nodeS = head;
+    let nodeE = head;
+
+    let i = 1;
+
+    for (i = 1; i < k; i++) {
+        nodeS = nodeS.next;
+    }
+
+    for (i = 1; i < n - k + 1; i++) {
+        nodeE = nodeE.next;
+    }
+
+    if (nodeS && nodeE) {
+        const swap = nodeS.key;
+        nodeS.key = nodeE.key;
+        nodeE.key = swap;
+    }
+
+    return head;
+};
+
+// -------------------------------------------------------------------------------------------------------------------------------
+/*
+from - [1,4,3,2,5,2], x = 3
+to   - [1,2,2,4,3,5]
+
+all nodes less than x come before nodes greater than or equal to x
+*/
+function partition(head, x) {
+    let smallDummy = new Node(-1);
+    let largeDummy = new Node(-1);
+
+    let smallTail = smallDummy;
+    let largeTail = largeDummy;
+
+    let currentNode = head;
+
+    while (currentNode !== null) {
+        if (currentNode.key < x) {
+            smallTail = smallTail.next = currentNode;
+        } else {
+            largeTail = largeTail.next = currentNode;
+        }
+        currentNode = currentNode.next;
+    }
+
+    smallTail.next = largeDummy.next ? largeDummy.next : null;
+    largeTail.next = null;
+
+    return smallDummy.next;
+};
+
+// -------------------------------------------------------------------------------------------------------------------------------
+/*
+You are given the head of a singly linked-list. The list can be represented as:
+L0 → L1 → … → Ln - 1 → Ln
+Reorder the list to be on the following form:
+L0 → Ln → L1 → Ln - 1 → L2 → Ln - 2 → …
+
+from - [1,2,3,4,5]
+to   - [1,5,2,4,3]
+*/
+function reorderList(head) {
+    let mid = middleElementOfLinkedList(head);
+
+    let left = head;
+    let right = mid.next;
+    mid.next = null;
+
+    right = reverseLinkedList(right);
+
+    let dummy = new Node(-1);
+    let tail = dummy;
+
+    while (left !== null || right !== null) {
+        if (left) {
+            tail = tail.next = left;
+            left = left.next;
+        }
+        if (right) {
+            tail = tail.next = right;
+            right = right.next;
+        }
+    }
+
+    return dummy.next;
+};
 
 // -------------------------------------------------------------------------------------------------------------------------------
 function splitCircularLinkedListIntoTwoHalves(last) {
     let clHead = null, clHead1 = null, clHead2 = null;
     if (last === null || last.next === last) return last;
     clHead = last.next;
-    let slow = null;
-    let fast = null;
+    let slow = clHead;
+    let fast = clHead;
 
-    if (clHead.next === last) { // 2 nodes only
-        slow = clHead;
-        fast = clHead;
-    } else { // more than 2 nodes
+    if (clHead.next !== last) { // not only 2 nodes (more than 2 are present)
         do {
             slow = slow.next;
             fast = fast.next.next;
         } while (fast !== last.next && fast.next !== last.next && fast.next.next !== last.next);
     }
+    // else { only 2 nodes are present
+    //     slow = clHead;
+    //     fast = clHead;
+    // }
 
     clHead1 = slow;
     clHead2 = last;
@@ -854,9 +989,6 @@ function splitCircularLinkedListIntoTwoHalves(last) {
         CLL.traverse(clHead2)
     */
 } // O(n)
-
-// -------------------------------------------------------------------------------------------------------------------------------
-function findPairsWithGivenSumInDoublyLinkedList() { }
 
 // -------------------------------------------------------------------------------------------------------------------------------
 function rotateDoublyLinkedListByNNodes(head, k) {
@@ -894,3 +1026,19 @@ function sortkSortedDoublyLinkedList() { }
 
 // -------------------------------------------------------------------------------------------------------------------------------
 function countTripletsInSortedDoublyLinkedListWhoseSumIsEqualToX() { }
+
+// -------------------------------------------------------------------------------------------------------------------------------
+function findPairsWithGivenSumInDoublyLinkedList() { }
+
+// -------------------------------------------------------------------------------------------------------------------------------
+function removeNthNodeFromLast() { } // important
+
+// -------------------------------------------------------------------------------------------------------------------------------
+function multiplyTwoNumberRepresentedByLinkedList() { }
+
+// -------------------------------------------------------------------------------------------------------------------------------
+function quickSortForLinkedList() { }
+
+// -------------------------------------------------------------------------------------------------------------------------------
+function mergekSortedLinkedList() { } // important
+

@@ -87,7 +87,7 @@ function searchElementInSortedMatrix(matrix = [
 } // O(logn + logm) - time & O(1) - space
 
 // -------------------------------------------------------------------------------------------------------------------------------
-function searchElementInRowColWiseMatrix(matrix = [
+function searchElementInRowColWiseSortedMatrix(matrix = [
     [2, 4, 9, 13],
     [3, 5, 11, 18],
     [6, 8, 16, 21],

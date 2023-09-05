@@ -38,8 +38,8 @@ function reverseFirstKElementOfQueue(queue, k) {
 function interleaveFirstSecondHalfQueue(queue) {
     if (queue.length() % 2 !== 0) return 'queue should be of even length';
     const tempQueue = new Queue();
-    const helfSize = queue.length() / 2;
-    for (let i = 0; i < helfSize; i++) {
+    const halfSize = queue.length() / 2;
+    for (let i = 0; i < halfSize; i++) {
         tempQueue.enqueue(queue.dequeue());
     }
     while (!tempQueue.isEmpty()) {
@@ -211,4 +211,14 @@ const screen = [
 ];
 const solution = new FloodFill(screen, screen[3][1], 3)
 console.log(solution.solve(3,1))
+[
+    [1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 0, 0],
+    [1, 0, 0, 1, 1, 0, 1, 1],
+    [1, 3, 3, 3, 3, 0, 1, 0],
+    [1, 1, 1, 3, 3, 0, 1, 0],
+    [1, 1, 1, 3, 3, 3, 3, 0],
+    [1, 1, 1, 1, 1, 3, 1, 1],
+    [1, 1, 1, 1, 1, 3, 3, 1]
+]
 */

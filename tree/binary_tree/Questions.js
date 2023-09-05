@@ -18,15 +18,18 @@ function inOrder(node) {
 }
 
 // tree
-const root = new Node(12);
-root.left = new Node(13);
-root.right = new Node(10);
-root.right.left = new Node(14);
-root.right.left.left = new Node(21);
-root.right.left.right = new Node(24);
-root.right.right = new Node(15);
-root.right.right.left = new Node(22);
-root.right.right.right = new Node(23);
+const root = new Node(1);
+root.left = new Node(2);
+root.right = new Node(3);
+root.left.left = new Node(4);
+root.right.left = new Node(2);
+root.right.left.left = new Node(4);
+root.right.right = new Node(4);
+// root.right.left.left = new Node(21);
+// root.right.left.right = new Node(24);
+// root.right.right = new Node(15);
+// root.right.right.left = new Node(22);
+// root.right.right.right = new Node(23);
 // root.left.right.left = new Node(6);
 // root.right.right.right = new Node(3);
 
@@ -357,7 +360,7 @@ function binaryTreeContainDuplicateSubtrees2OrMore(root) {
     }
 
     function generator(root) {
-        if (root === null) return;
+        if (root === null) return null;
         const left = generator(root.left);
         const right = generator(root.right);
 
@@ -369,7 +372,6 @@ function binaryTreeContainDuplicateSubtrees2OrMore(root) {
     }
 
     generator(root);
-    console.log(map)
 
     for (let items of map) {
         if (items[1] >= 2) {

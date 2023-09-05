@@ -54,7 +54,7 @@ function nQueen(n = 4) {
     function isSafe(board, x, y) {
         let row, col;
 
-        // check row on left side
+        // check row
         for (row = 0; row < n; row++) {
             if (board[row][y] === 1) {
                 return false;

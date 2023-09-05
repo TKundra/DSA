@@ -91,7 +91,7 @@ class DoublyLinkedList {
         Space Complexity: O(1) */
 
     deleteNode(node) {
-        if (!this.head || !node) return;
+        if (!this.head || !node) return -1;
         if (this.head === node) 
             this.head = node.next;
         if (node.next !== null)

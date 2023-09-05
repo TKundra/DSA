@@ -5,12 +5,14 @@ function printNumbers(number = 1) {
     printNumbers(number + 1);
 } // O(n)
 
+// -------------------------------------------------------------------------------------------------------------------------------
 // add all numbers till n
 function addAll(n = 5) {
-    if (n === 0) return 0;
+    if (n === 1 || n === 0) return n;
     return n + addAll(n - 1);
 } // O(n)
 
+// -------------------------------------------------------------------------------------------------------------------------------
 // calculate n raised to power p
 function pow(n = 2, p = 3) {
     if (p === 0) return 1;
@@ -23,12 +25,14 @@ function factorial(n = 5) {
     return n * factorial(n - 1);
 } // O(n)
 
+// -------------------------------------------------------------------------------------------------------------------------------
 // nth fibonacci number {0,1,1,2,3,5,8,13,...}
 function fibonacci(n = 5) {
     if (n === 0 || n === 1) return n;
     return fibonacci(n - 1) + fibonacci(n - 2);
 } // O(2^n)
 
+// -------------------------------------------------------------------------------------------------------------------------------
 // print fibonacci series
 const fiboSeries = [0, 1];
 function fibonacciSeries(a = 0, b = 1, n = 10) {
@@ -41,6 +45,7 @@ function fibonacciSeries(a = 0, b = 1, n = 10) {
     fibonacciSeries(b, c, n - 1);
 } // O(n)
 
+// -------------------------------------------------------------------------------------------------------------------------------
 // tower of hanoi
 function towerOfHanoi(n = 3, source = "S", helper = "H", destination = "D") {
     if (n === 1) {
@@ -52,6 +57,7 @@ function towerOfHanoi(n = 3, source = "S", helper = "H", destination = "D") {
     towerOfHanoi(n - 1, helper, source, destination);
 } // O(2^n - 1) ~= O(2^n)
 
+// -------------------------------------------------------------------------------------------------------------------------------
 // print string in reverse
 function stringReverse(string = "javascript", index = 10 - 1) {
     if (index < 0) return;
@@ -59,8 +65,9 @@ function stringReverse(string = "javascript", index = 10 - 1) {
     stringReverse(string, index - 1);
 } // O(n)
 
+// -------------------------------------------------------------------------------------------------------------------------------
 // find first and last occurrence of element in string
-let first = last = -1;
+let first = -1, last = -1;
 function firstAndLastOccurrence(string = "abaacdaefaah", index = 0, char = 'a') {
     if (index === string.length) {
         console.log(`First occurrence at ${first} & last occurrence at ${last}`)
@@ -75,6 +82,7 @@ function firstAndLastOccurrence(string = "abaacdaefaah", index = 0, char = 'a') 
     firstAndLastOccurrence(string, index + 1, char);
 } // O(n)
 
+// -------------------------------------------------------------------------------------------------------------------------------
 /*
 [1,2,3,4,5] - true
 [1,2,3,4,4] - false
@@ -87,6 +95,7 @@ function sortedStricklyIncreasing(array = [1, 2, 3, 4, 5], index = 0) {
     return false;
 } // O(n)
 
+// -------------------------------------------------------------------------------------------------------------------------------
 // move all x to end of string
 function moveAllXToEnd(string = "axbcxxd", index = 0, xCount = 0, resultString = '') {
     if (index === string.length) {
@@ -104,6 +113,7 @@ function moveAllXToEnd(string = "axbcxxd", index = 0, xCount = 0, resultString =
     return moveAllXToEnd(string, index + 1, xCount, resultString);
 } // O(n + xCount-loop) -> O(n + n) -> O(n)
 
+// -------------------------------------------------------------------------------------------------------------------------------
 // remove duplicates from string
 const removeDuplicatesSet = new Set();
 function removeDuplicates(string = "abbccda", index = 0, resultString = '') {
@@ -121,6 +131,7 @@ function removeDuplicates(string = "abbccda", index = 0, resultString = '') {
     }
 } // O(n)
 
+// -------------------------------------------------------------------------------------------------------------------------------
 // print all subsequences of string
 function subsequences(string = "abc", index = 0, resultString = '') {
     if (index === string.length) {
@@ -134,6 +145,7 @@ function subsequences(string = "abc", index = 0, resultString = '') {
     subsequences(string, index + 1, resultString);
 } // O(2^n)
 
+// -------------------------------------------------------------------------------------------------------------------------------
 // print all unique subsequences of string
 function uniqueSubsequences(unique = new Set(), string = "aaa", index = 0, resultString = '') {
     if (index === string.length) {
@@ -152,6 +164,7 @@ function uniqueSubsequences(unique = new Set(), string = "aaa", index = 0, resul
     uniqueSubsequences(unique, string, index + 1, resultString);
 } // O(2^n)
 
+// -------------------------------------------------------------------------------------------------------------------------------
 // print keypad combinations
 const keypad = new Map([
     [0, "."],
@@ -177,18 +190,64 @@ function keypadCombinations(string = "23", index = 0, resultString = '') {
     }
 } // 4 choices max, string length is n; O(4^n)
 
-// printNumbers()
-// console.log(addAll())
-// console.log(pow())
-// console.log(factorial())
-// console.log(fibonacci())
-// fibonacciSeries()
-// towerOfHanoi()
-// stringReverse()
-// firstAndLastOccurrence()
-// console.log(sortedStricklyIncreasing())
-// moveAllXToEnd()
-// removeDuplicates()
-// subsequences()
-// uniqueSubsequences()
-// keypadCombinations()
+// -------------------------------------------------------------------------------------------------------------------------------
+// i.e all possible combinations of letters
+function printAllPermutations(string = "abc", resultString = "", index = 0) {
+    if (string.length === 0) {
+        console.log(resultString);
+        return;
+    }
+    for (let i = 0; i < string.length; i++) {
+        const char = string.charAt(i);
+        let newString = string.substring(0, i) + string.substring(i + 1);
+        printAllPermutations(newString, resultString+char, index+1);
+    }
+} // O(n!)
+
+// -------------------------------------------------------------------------------------------------------------------------------
+function countPath(n = 3, m = 3, x = 0, y = 0) {
+    // reached boundary
+    if (x === n || y === m) return 0;
+    // reached end
+    if (x === n-1 && y === m-1) return 1;
+    // movements
+    const down = countPath(n, m, x+1, y);
+    const right = countPath(n, m, x, y+1);
+    return down + right;
+}  
+
+// -------------------------------------------------------------------------------------------------------------------------------
+function numberOfWaysToInviteNPeople(n = 2) {
+    if (n <= 1) return 1;
+    const way1 = numberOfWaysToInviteNPeople(n-1);
+    const way2 = (n-1) * numberOfWaysToInviteNPeople(n-2);
+    return way1 + way2;
+}
+
+// -------------------------------------------------------------------------------------------------------------------------------
+function printAndReturnLengthOfLongestUniqueSubstring(string = "ABDEFGABEF", result = "") {
+    const n = string.length;
+    if (n === 0 || n === 1) return n;
+    let length = Number.MIN_VALUE;
+    let hit = 0;
+    for (let i = 0; i < n; i++) {
+        const char = string.charAt(i);
+        if (result.includes(char)) {
+            result = result.substring(result.indexOf(char)+1);
+            hit = 1; // update hit, if string updated
+        }
+        result += char;
+        length = Math.max(length, result.length);
+        if (hit === 1 && length === result.length) {
+            console.log(result);
+            hit = 0; // reset hit
+        }
+    }
+    return length;
+}
+
+// -------------------------------------------------------------------------------------------------------------------------------
+function binaryToDecimal() { }
+
+// -------------------------------------------------------------------------------------------------------------------------------
+function decimalTobinary() { }

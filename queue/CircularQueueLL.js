@@ -53,13 +53,15 @@ class CircularQueueLL {
 
 export default CircularQueueLL;
 
-const queue = new CircularQueueLL();
-queue.enqueue(3);
-queue.enqueue(4);
-queue.enqueue(5);
-queue.enqueue(6);
-console.log('peek', queue.peek());
-console.log('dequeue', queue.dequeue());
-console.log('dequeue', queue.dequeue());
-console.log('peek', queue.peek());
-queue.traverse()
+/* Usage
+    const queue = new CircularQueueLL();
+    queue.enqueue(3);
+    queue.enqueue(4);
+    queue.enqueue(5);
+    queue.enqueue(6);
+    console.log('peek', queue.peek());
+    console.log('dequeue', queue.dequeue());
+    console.log('dequeue', queue.dequeue());
+    console.log('peek', queue.peek());
+    queue.traverse()
+*/

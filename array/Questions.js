@@ -36,12 +36,6 @@ function palindrome(number = 3663) {
 } // O(n) - time & O(n) - space
 
 // -------------------------------------------------------------------------------------------------------------------------------
-function factorial(n = 0) {
-    if (n <= 1) return n;
-    return n * factorial(n - 1);
-}
-
-// -------------------------------------------------------------------------------------------------------------------------------
 function reverseNumber(number = 1234) {
     let reverse = 0, reminder;
     while (number > 0) {
@@ -53,24 +47,16 @@ function reverseNumber(number = 1234) {
 } // O(n) - time & O(1) - space
 
 // -------------------------------------------------------------------------------------------------------------------------------
-function fibonacciSeriesR(n = 10) {
-    if (n <= 1) return n;
-    return fibonacciSeriesR(n - 1) + fibonacciSeriesR(n - 2);
-}
-
-// -------------------------------------------------------------------------------------------------------------------------------
-function binaryToDecimal() { }
-
-// -------------------------------------------------------------------------------------------------------------------------------
-function decimalTobinary() { }
-
-// -------------------------------------------------------------------------------------------------------------------------------
 function concatArray(array) {
     const result = [], n = array.length;
     for (let i = 0; i < n * 2; i++) {
         result[i] = array[i % n];
     }
     return result;
+    /*
+    or
+    result.push.apply(result, array);
+    */
 }
 
 // -------------------------------------------------------------------------------------------------------------------------------
@@ -283,7 +269,7 @@ function mergeTwoSortedArray(array1 = [1, 2, 3], array2 = [2, 5, 6]) {
     const resultArray = [];
     let i = 0, j = 0, k = 0;
     while (i < m && j < n) {
-        if (array1[i] <= array2[j]) {
+        if (array1[i] < array2[j]) {
             resultArray[k] = array1[i];
             i++;
         } else {
@@ -622,7 +608,7 @@ function leftRotateArrayByK(array = [1, 2, 3, 4, 5, 6, 7], k = 2) {
 } // O(n*d) - time & O(1) - space
 
 function leftRotateArrayByKTimeOptimized(array = [1, 2, 3, 4, 5, 6, 7], k = 2) {
-    let temp = [...nums];
+    let temp = [...array];
     for (let i = 0; i < temp.length; i++) {
         /*  for each element index, find the index position where you want to move that element. e.g 
             if your current position is i=1, then you want to move nums[i] to i+k position. and 
@@ -630,9 +616,9 @@ function leftRotateArrayByKTimeOptimized(array = [1, 2, 3, 4, 5, 6, 7], k = 2) {
             so 8 % nums.length = 8 % 7 = 1. means that whent i=5, then nums[5] will move to 1 index position or nums[1] = temp[5]
         */
         let p = (i + k) % temp.length;
-        nums[p] = temp[i];
+        array[p] = temp[i];
     }
-    return nums;
+    return array;
 } // O(n) - time
 
 // -------------------------------------------------------------------------------------------------------------------------------
@@ -840,6 +826,13 @@ function maximumProductSubArrayOptimized(array = [2, 3, -2, 4]) {
     return result;
 } // O(n) - time & O(1) - space
 
+/*
+    [-1,2,-3,0,-4,-5]
+    from both directions because
+    - from left     -1*2*-3 = 6
+    - from right    -5*-4   = 20 
+    as 0 will make product 0
+*/
 function maximumProductSubArrayOptimizedEasy(array = [2, 3, -2, 4]) {
     let answer = array[0];
     let product = 1, n = array.length;
@@ -950,7 +943,7 @@ function subArrayWithGivenSumOptimized(array = [1, 4, 20, 3, 10, 5], sum = 33) {
     let currentSum = 0;
     for (let i = 0; i < array.length; i++) {
         currentSum += array[i];
-        if (map.has(sum - currentSum)) {
+        if (map.has(currentSum - sum)) {
             return array.slice(map.get(currentSum - sum) + 1, i + 1);
         }
         // store cumulative sum and its index
@@ -1039,7 +1032,7 @@ function majorityElement(array) {
         }
     }
     return 0;
-} // O(n) - time & O(1) - space
+} // O(nlogn) - time & O(1) - space
 
 // -------------------------------------------------------------------------------------------------------------------------------
 function waveArray(array = [10, 90, 49, 2, 1, 5, 23]) {
@@ -1158,9 +1151,6 @@ function minimiseTheMaximumDifference(array = [1, 5, 15, 10], k = 3) {
 } // O(nlogn)
 
 // -------------------------------------------------------------------------------------------------------------------------------
-function minimumNumberOfJumpsToReachEnd() { }
-
-// -------------------------------------------------------------------------------------------------------------------------------
 function mergeIntervals() {
     const intervals = [[1, 4], [4, 5]].sort((a, b) => a[0] - b[0]);
 
@@ -1185,21 +1175,6 @@ function mergeIntervals() {
 
     console.log(stack.print().split(' -> ').reverse().join(' -> '));
 } // O(nlogn) - due to sorting, Once array of intervals is sorted, merging takes linear time.
-
-// -------------------------------------------------------------------------------------------------------------------------------
-function subArrayWithEqual0sAnd1s() { }
-
-// -------------------------------------------------------------------------------------------------------------------------------
-function maximumIndex() { }
-
-// -------------------------------------------------------------------------------------------------------------------------------
-function partitionEqualSubsetSum() { }
-
-// -------------------------------------------------------------------------------------------------------------------------------
-function longestAlternativelySubsequence() { }
-
-// -------------------------------------------------------------------------------------------------------------------------------
-function pairsWithGivenSumInSortedArray() { }
 
 // -------------------------------------------------------------------------------------------------------------------------------
 function printNumbersWithoutLoop(element, original) {
@@ -1274,10 +1249,10 @@ function threeSum(array) {
                 }
                 left++;
                 right--;
-            } else if (sum > 0) {
-                right--;
-            } else {
+            } else if (sum < 0) {
                 left++;
+            } else {
+                right--;
             }
         }
     }
@@ -1303,3 +1278,18 @@ function slidingWindowMaximum(array, k) {
 
 // -------------------------------------------------------------------------------------------------------------------------------
 function minimumJumpsToReachEnd() { }
+
+// -------------------------------------------------------------------------------------------------------------------------------
+function subArrayWithEqual0sAnd1s() { }
+
+// -------------------------------------------------------------------------------------------------------------------------------
+function maximumIndex() { }
+
+// -------------------------------------------------------------------------------------------------------------------------------
+function partitionEqualSubsetSum() { }
+
+// -------------------------------------------------------------------------------------------------------------------------------
+function longestAlternativelySubsequence() { }
+
+// -------------------------------------------------------------------------------------------------------------------------------
+function pairsWithGivenSumInSortedArray() { }

@@ -76,3 +76,64 @@ function kthLargestOptimized(array = [2, 1, 4, 6, 3, 9, 7], k = 2) {
 } // O(n*log(k)) - time & O(1) - space
 
 // -------------------------------------------------------------------------------------------------------------------------------
+function mergeTwoBinaryMaxHeap(array1, array2) {
+    const n = array1.length, m = array2.length;
+    const combinedArray = [];
+    for (let i = 0; i < n; i++) {
+        combinedArray[i] = array1[i];
+    }
+    for (let i = 0; i < m; i++) {
+        combinedArray[n + i] = array2[i];
+    }
+
+    function heapify(array, size, i) {
+        let largest = i, left = 2 * i + 1, right = 2 * i + 2;
+        if (left < size && array[left] > array[largest]) {
+            largest = left;
+        }
+        if (right < size && array[right] > array[largest]) {
+            largest = right;
+        }
+
+        if (largest !== i) {
+            const swap = array[largest];
+            array[largest] = array[i];
+            array[i] = swap;
+
+            heapify(array, size, largest);
+        }
+    }
+
+    const N = combinedArray.length;
+
+    for (let i = parseInt(N/2)-1; i >= 0; i--) {
+        heapify(combinedArray, N, i)
+    }
+
+    return combinedArray;
+} // O(N + M) - time & O(N + M) - space
+
+// -------------------------------------------------------------------------------------------------------------------------------
+function kthLargestSumContiguousSubArray(array, k) {
+    if (k > array.length) return -1;
+    const resultantArray = [];
+
+    for (let i = 0; i < array.length; i++) {
+        let currentSum = 0;
+        for (let j = i; j < array.length; j++) {
+            currentSum += array[j]
+            resultantArray.push(currentSum)
+        }
+    }
+
+    resultantArray.sort((a, b) => b-a)
+
+    return resultantArray[k - 1];
+} //  O(n2*log(n2))
+
+// -------------------------------------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------------------------------------
