@@ -263,7 +263,7 @@ function isPerfectBinaryTree(root, level, index = 0) {
     // if mismatched leaves
     if (root.left === null || root.right === null) return false;
     // call for subtree
-    return isPerfectBinaryTree(root.left, level, index + 1) + isPerfectBinaryTree(root.right, level, index + 1);
+    return isPerfectBinaryTree(root.left, level, index + 1) && isPerfectBinaryTree(root.right, level, index + 1);
 } // O(n) time & O(h) space
 // isPerfectBinaryTree(root, level(root), 0)
 
